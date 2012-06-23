@@ -1,0 +1,2 @@
+module PaypalIpnControllerHelper
+end

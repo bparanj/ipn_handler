@@ -1,4 +1,6 @@
 IpnHandler::Application.routes.draw do
+  get "paypal_ipn_controller/notify"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
