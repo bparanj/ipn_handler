@@ -1,32 +1,6 @@
 require 'uri'
 require 'net/http'
 require 'net/https'
-class PaymentsController < ApplicationController
-  #skip this check b/c post comes in from paypal
-  protect_from_forgery :except => [:ipn]
-  def ipn
-    begin
-      if request.post?
-
-      #you need to post back to paypal the name/value string
-      #in the same order received w/added cmd=_notify-validate
-      from_pp = request.raw_post
-      data = from_pp + "&cmd=_notify-validate"
-      url = URI.parse 'https://sandbox.paypal.com/cgi-bin/webscr'
-      http = Net:HTTP.new url.host, url.port
-      http.use_ssl = true
-
-     response, data = http.post url.path, data, {
-        'Content-Type' => 'application/x-www-for-urlencoded' }
-      end
-     rescue Exception => e
-     logger.info("Error: paypal transaction #{e.message}")
-    end
-  end
-end
-
-
-
 def notify
     notify = Paypal::Notification.new(request.raw_post)
     enrollment = Enrollment.find(notify.item_id)
