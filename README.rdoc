@@ -1,3 +1,13 @@
+1. The first few tests were written by copying the steps 1 - 6 from Paypal IPN Guide.
+2. Read the ActiveMerchant tests to learn about the plugin. 
+3. The initial version of the tests were more like ActiveMerchant learning tests and tightly coupled to the 	
+	 implementation. Therefore the tests were brittle as the refactoring forced data to be hidden.
+4. Deleted tests that were not related to controller responsibilities.
+5. Moved those tests to layer below that provides the service to Paypal API.
+6. Notice the mocking of the Paypal service API in the controller specs.
+
+
+
 require 'uri'
 require 'net/http'
 require 'net/https'
