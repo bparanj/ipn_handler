@@ -11,7 +11,10 @@ This example shows:
    that gave quick feedback and allowed us to build the system.
 5. Moved those tests to layer below that provides the service to Paypal API.
 6. Notice the mocking of the Paypal service API in the controller specs.
-7. 
+7. The first version of specs for PaypalService object has shown us the need for PaypalNotification active
+   record object for most of the checks. PaypalService will delegate the checks to the persistant object and
+   make most of the methods as private. Only process_payment class method will be public. The specs will be
+   moved to ActiveRecord object tests for PaypalNotification.
 
 
 
