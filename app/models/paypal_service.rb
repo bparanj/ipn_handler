@@ -32,7 +32,6 @@ class PaypalService
 
   def check_payment
   	payment = Payment.find_by_transaction_id(notify.transaction_id)
-  	p payment
   	payment.has_correct_amount?(notify.gross, notify.currency)
   end
 end

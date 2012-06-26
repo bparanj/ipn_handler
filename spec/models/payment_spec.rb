@@ -12,36 +12,36 @@ describe Payment do
   specify 'Check gross and currency are correct' do
     payment = Payment.new
     payment.gross = 100.99
-    payment.currency = 'CAN'
+    payment.currency = 'CAD'
 
-    result = payment.has_correct_amount?(100.99, 'CAN')
+    result = payment.has_correct_amount?("100.99", 'CAD')
     result.should be_true 
   end
 
   specify 'Check gross and currency are correct : Same amount, different currency' do
     payment = Payment.new
     payment.gross = 100.99
-    payment.currency = 'CAN'
+    payment.currency = 'CAD'
 
-    result = payment.has_correct_amount?(100.99, 'US')
+    result = payment.has_correct_amount?("100.99", 'USD')
     result.should be_false
   end
 
   specify 'Check gross and currency are correct : Different amount, same currency' do
     payment = Payment.new
     payment.gross = 100.99
-    payment.currency = 'CAN'
+    payment.currency = 'CAD'
 
-    result = payment.has_correct_amount?(200.99, 'CAN')
+    result = payment.has_correct_amount?("200.99", 'CAD')
     result.should be_false
   end
 
   specify 'Check gross and currency are correct : Different amount, different currency' do
     payment = Payment.new
     payment.gross = 100.99
-    payment.currency = 'CAN'
+    payment.currency = 'CAD'
 
-    result = payment.has_correct_amount?(200.99, 'US')
+    result = payment.has_correct_amount?("200.99", 'USD')
     result.should be_false
   end
  

@@ -44,7 +44,6 @@ describe PaypalService do
     payment.gross = 500.00
     payment.currency = 'CAD'
     payment.save
-    p payment
     
     paypal_service.check_payment.should be_true
   end
