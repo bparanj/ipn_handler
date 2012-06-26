@@ -19,9 +19,8 @@ class PaypalService
   # Delegate the implementation to the PaymentNotification ActiveRecord object.
   # Test PaymentNotification methods. Move the tests in PaypalService object to PaymentNotification.
   def transaction_processed?
-  	 #  Check the database if notify.transaction_id has been processed 
-  	 # or not by hitting the db
-  	false
+  	payment = Payment.find_by_transaction_id(notify.transaction_id)
+  	payment.processed?
   end
 
   def primary_paypal_email?
@@ -32,8 +31,8 @@ class PaypalService
   end
 
   def check_payment
-  	# Check notify.gross and notify.currency are correct 
-  	# for this product by hitting the db
-  	true
+  	payment = Payment.find_by_transaction_id(notify.transaction_id)
+  	p payment
+  	payment.has_correct_amount?(notify.gross, notify.currency)
   end
 end

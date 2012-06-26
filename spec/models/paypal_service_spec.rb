@@ -6,12 +6,17 @@ describe PaypalService do
   let(:paypal_service) do
     PaypalService.new(http_raw_data)
   end
-  
+
   specify 'Payment status must be complete'  do 
     paypal_service.notify.should be_complete
   end
   
   specify 'Check that transaction id has not been previously processed' do
+    payment = Payment.new
+    payment.transaction_id = '6G996328CK404320L'
+    payment.processed = false
+    payment.save
+
     already_processed = paypal_service.transaction_processed?
 
     already_processed.should be_false
@@ -32,7 +37,15 @@ describe PaypalService do
     paypal_service.notify.acknowledge.should be_false
   end
   
-  specify 'Check that payment amount and payment currency are correct' do
+  specify 'Check that payment amount and payment currency are correct', :focus => true  do
+    Payment.delete_all
+    payment = Payment.new
+    payment.transaction_id = '6G996328CK404320L'
+    payment.gross = 500.00
+    payment.currency = 'CAD'
+    payment.save
+    p payment
+    
     paypal_service.check_payment.should be_true
   end
   
