@@ -44,11 +44,16 @@ describe PaypalService do
     payment.gross = 500.00
     payment.currency = 'CAD'
     payment.save
-    
+
     paypal_service.check_payment.should be_true
   end
   
-  specify 'Check that receiver_email is your buyer\'s Primary Paypal email' do    
+  specify 'Check that receiver_email is your buyer\'s Primary Paypal email' do   
+    account = Account.new 
+    account.custom = "89CVZ"
+    account.primary_paypal_email = 'tobi@leetsoft.com'
+    account.save
+
     primary_paypal_email = paypal_service.primary_paypal_email?
     
     primary_paypal_email.should be_true

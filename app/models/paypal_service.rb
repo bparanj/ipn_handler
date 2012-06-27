@@ -24,10 +24,11 @@ class PaypalService
   end
 
   def primary_paypal_email?
+  	# receiver_email - Primary email address of the payment recipient (merchant)
   	# Check that the notify.account is the your primary paypal email
   	# by hitting the db
-  	# your could mean either the buyer or the seller. I don't know yet.
-  	true
+  	account = Account.find_by_custom(@notify.item_id)
+  	account.primary_paypal_email == @notify.account
   end
 
   def check_payment
