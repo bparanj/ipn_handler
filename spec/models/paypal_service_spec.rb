@@ -3,26 +3,24 @@ require 'spec_helper'
 include ActiveMerchant::Billing::Integrations
 
 describe PaypalService do
-  let(:paypal_service) do
-    PaypalService.new(http_raw_data)
-  end
 
-  specify 'Payment status must be complete'  do 
-    paypal_service.notify.should be_complete
-  end
-
-  context 'VERIFIED' do
+  context 'Payment is Compelete' do
     before do
+      @paypal_service = PaypalService.new(http_raw_data)
       Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
     end
+    
+    specify 'Payment status must be complete'  do 
+      @paypal_service.notify.should be_complete
+    end
 
-    specify 'Check that transaction id has not been previously processed' do
+    specify 'Check that the transaction is not already processed, identified by the transaction ID' do
       payment = Payment.new
       payment.transaction_id = '6G996328CK404320L'
       payment.processed = false
       payment.save
 
-      already_processed = paypal_service.transaction_processed?
+      already_processed = @paypal_service.transaction_processed?
 
       already_processed.should be_false
     end
@@ -32,10 +30,10 @@ describe PaypalService do
       # From client perspective, only acknowledge value is important
       # It is also the implementation details of the ActiveMerchant plugin
       # The plugin tests that case and we would be testing the plugin unnecessarily.
-      paypal_service.notify.acknowledge.should be_true
+      @paypal_service.notify.acknowledge.should be_true
     end
 
-    specify 'Check that payment amount and payment currency are correct', :focus => true  do
+    specify 'Check that payment amount and payment currency are correct'  do
       Payment.delete_all
       payment = Payment.new
       payment.transaction_id = '6G996328CK404320L'
@@ -43,7 +41,7 @@ describe PaypalService do
       payment.currency = 'CAD'
       payment.save
 
-      paypal_service.check_payment.should be_true
+      @paypal_service.check_payment.should be_true
     end
 
     specify 'Check that receiver_email is your buyer\'s Primary Paypal email' do   
@@ -52,17 +50,41 @@ describe PaypalService do
       account.primary_paypal_email = 'tobi@leetsoft.com'
       account.save
 
-      primary_paypal_email = paypal_service.primary_paypal_email?
+      primary_paypal_email = @paypal_service.primary_paypal_email?
 
       primary_paypal_email.should be_true
     end
-  end
-  
-  context 'INVALID' do
+
+    specify 'Order should be fulfilled if payment_status is Completed'  do
+      order = double("Order")
+      Order.stub(:find) { order }
+
+      order.should_receive(:fulfill)
+
+      @paypal_service.process_payment
+    end
+      
     specify 'Step 3 in IPN handler negative case: Post back to PayPal system to validate' do
       Paypal::Notification.any_instance.stub(:ssl_post).and_return('INVALID')
 
-      paypal_service.notify.acknowledge.should be_false
+      @paypal_service.notify.acknowledge.should be_false
     end    
+  end
+
+  context 'Payment Incomplete' do
+    before do
+     @paypal_service2 = PaypalService.new(http_raw_data_incomplete)
+     Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
+    end
+
+    specify 'Order should not be fulfilled if payment_status is not Completed'  do
+      order = double("Order")
+      Order.stub(:find) { order }
+
+      order.should_not_receive(:fulfill)
+
+      @paypal_service2.process_payment
+    end
+
   end
 end

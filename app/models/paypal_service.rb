@@ -8,7 +8,13 @@ class PaypalService
 	@valid = @notify.acknowledge
   end
 
-  def self.process_payment
+  def process_payment
+  	if @notify.complete?
+  		# TODO: Use the item id to find the order id that is combined 
+  		#  with other pass through variables.
+  		order = Order.find(@notify.item_id)
+  		order.fulfill
+  	end
     # check the $payment_status=Completed
     # check that $txn_id has not been previously processed
     # check that $receiver_email is your Primary PayPal email
@@ -27,6 +33,9 @@ class PaypalService
   	# receiver_email - Primary email address of the payment recipient (merchant)
   	# Check that the notify.account is the your primary paypal email
   	# by hitting the db
+  	# TODO: Item Id is the id that keys into the record of all fields that 
+  	# gets saved in the database for IPN lookup using pass through custom variable
+  	# Should the custom field be stored in account ? I don't know yet.
   	account = Account.find_by_custom(@notify.item_id)
   	account.primary_paypal_email == @notify.account
   end
