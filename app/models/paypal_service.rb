@@ -9,14 +9,18 @@ class PaypalService
   end
 
   def process_payment
+  	# 1. check the $payment_status=Completed
   	if @notify.complete?
   		# TODO: Use the item id to find the order id that is combined 
   		#  with other pass through variables.
-  		order = Order.find(@notify.item_id)
-  		order.fulfill
+  		# 2. check that $txn_id has not been previously processed
+  		previously_processed = Payment.previously_processed?(@notify.transaction_id)
+  		unless previously_processed
+		  order = Order.find(@notify.item_id)
+	  	  order.fulfill  			
+  		end
   	end
-    # check the $payment_status=Completed
-    # check that $txn_id has not been previously processed
+    
     # check that $receiver_email is your Primary PayPal email
     # check that $payment_amount/$payment_currency are correct
     # process payment

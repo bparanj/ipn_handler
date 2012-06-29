@@ -8,4 +8,8 @@ class Payment < ActiveRecord::Base
     price = Money.new(self.gross, self.currency)
     price == paid
   end
+  
+  def self.previously_processed?(transaction_id)
+    false
+  end
 end

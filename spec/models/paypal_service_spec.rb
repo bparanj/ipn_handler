@@ -54,16 +54,26 @@ describe PaypalService do
 
       primary_paypal_email.should be_true
     end
-
-    specify 'Order should be fulfilled if payment_status is Completed'  do
+    # 1. 
+    specify 'Order should be fulfilled if all checks pass'  do
       order = double("Order")
       Order.stub(:find) { order }
+      Payment.stub(:previously_processed?) { false }
 
       order.should_receive(:fulfill)
 
       @paypal_service.process_payment
     end
-      
+    
+    # 2.
+    specify 'Check that transaction_id has not been previously processed', :focus => true  do
+      order = stub('Order').as_null_object
+      Order.stub(:find) { order }
+      Payment.should_receive(:previously_processed?)
+
+      @paypal_service.process_payment      
+    end
+
     specify 'Step 3 in IPN handler negative case: Post back to PayPal system to validate' do
       Paypal::Notification.any_instance.stub(:ssl_post).and_return('INVALID')
 
