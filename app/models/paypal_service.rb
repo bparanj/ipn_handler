@@ -3,8 +3,8 @@ class PaypalService
 
   include ActiveMerchant::Billing::Integrations
 
-  def initialize(data)
-  	@notify = Paypal::Notification.new(data)
+  def initialize(notify)
+  	@notify = notify
 	@valid = @notify.acknowledge
   end
 
