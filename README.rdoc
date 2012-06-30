@@ -2,6 +2,7 @@ This example shows:
 1. When to delete a test?
 2. The 'Breaking Out' concept discussed in Growing OO system guided by tests. By applying separation of 
 	 concerns we have created a new object PaypalService that interacts with Paypal API.
+3. How to speed up unit tests? Can you run the tests with disconnected from network connection?
 
 1. The first few tests were written by copying the steps 1 - 6 from Paypal IPN Guide.
 2. Read the ActiveMerchant tests to learn about the plugin. 
