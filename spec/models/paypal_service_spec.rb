@@ -20,20 +20,7 @@ describe PaypalService do
 
       Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
     end
-    
-    specify 'Payment status must be complete', :focus => true do 
-      @paypal_service.notify.should be_complete
-    end
 
-    specify 'Step 3 in IPN handler : Post back to PayPal system to validate', :focus => true do
-      # Could have writted paypal_service.notify.status.should == 'Completed'
-      # From client perspective, only acknowledge value is important
-      # It is also the implementation details of the ActiveMerchant plugin
-      # The plugin tests that case and we would be testing the plugin unnecessarily.
-      @paypal_service.notify.acknowledge.should be_true
-    end
-
-    # 1. 
     specify 'Order should be fulfilled if all checks pass'  do
       order = double("Order")
       Order.stub(:find) { order }
@@ -44,7 +31,6 @@ describe PaypalService do
       @paypal_service.process_payment
     end
     
-    # 2.
     specify 'Check that transaction_id has not been previously processed'  do
       order = stub('Order').as_null_object
       Order.stub(:find) { order }
@@ -52,13 +38,6 @@ describe PaypalService do
 
       @paypal_service.process_payment      
     end
-    # This test is testing the ActiveMerchant logic not application logic. Delete this and
-    # write a test that is focused on application logic which does post back.
-    xspecify 'Step 3 in IPN handler negative case: Post back to PayPal system to validate' do
-      Paypal::Notification.any_instance.stub(:ssl_post).and_return('INVALID')
-
-      @paypal_service.notify.acknowledge.should be_false
-    end    
   end
 
   context 'Payment Incomplete' do

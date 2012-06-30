@@ -5,7 +5,7 @@ class PaypalIpnController < ApplicationController
   include ActiveMerchant::Billing::Integrations
 
   def notify
-  	ipn = PaypalService.new(request.raw_post)
+  	ipn = PaypalService.new(Paypal::Notification.new(request.raw_post))
 	
 	if ipn.valid
 	  PaypalService.process_payment

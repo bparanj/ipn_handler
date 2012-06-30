@@ -3,11 +3,15 @@ require 'spec_helper'
 describe PaypalIpnController do
   include ActiveMerchant::Billing::Integrations
 
+
   specify "Step 1 : IPN Listener should wait for an HTTP post from PayPal" do
+  	paypal_service = double("PaypalService")
+  	paypal_service.stub(:valid => true)
+
     post 'notify', {}
     response.body.should be_blank
   end
-
+  # This is not the job of the controller anymore
   specify 'Step 2 : Read post from Paypal' do
     request.stub!(:raw_post).and_return(http_raw_data)
     ipn = stub(:valid => true)
