@@ -16,6 +16,3 @@ class PaypalIpnController < ApplicationController
   	render :nothing => true 
   end
 end
-
- # log for manual investigation
-

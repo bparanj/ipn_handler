@@ -16,15 +16,14 @@ class PaypalService
       # 2. check that $txn_id has not been previously processed
       previously_processed = Payment.previously_processed?(@notify.transaction_id)
       unless previously_processed
-        order = Order.find(@notify.item_id)
-        order.fulfill  			
+		if Account.receiver_email_merchant_primary_paypal_email?(@notify.item_id, @notify.account)      	
+		  if Payment.transaction_has_correct_amount?(@notify, @notify.gross, @notify.currency)
+		    Order.ready_for_fulfillment(@notify.item_id)
+		  end
+		end
       end
     end
 
-    # check that $receiver_email is your Primary PayPal email
-    # transaction_has_correct_amount?(transaction_id, gross, currency)
-    # check that $payment_amount/$payment_currency are correct
-    # process payment
   end
 
 end

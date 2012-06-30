@@ -5,4 +5,9 @@ class Order < ActiveRecord::Base
     status = 'fulfill'
     save
   end
+  
+  def self.ready_for_fulfillment(id)
+    order = find(id)
+    order.fulfill
+  end
 end

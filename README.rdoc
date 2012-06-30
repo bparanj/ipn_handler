@@ -16,7 +16,7 @@ This example shows:
    record object for most of the checks. PaypalService will delegate the checks to the persistant object and
    make most of the methods as private. Only process_payment class method will be public. The specs will be
    moved to ActiveRecord object tests for PaypalNotification.
-
+8. Surprised to see how injecting dependencies to make the test run faster resulted in decorator pattern.
 
 
 require 'uri'

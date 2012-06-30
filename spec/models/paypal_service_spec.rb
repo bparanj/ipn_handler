@@ -22,18 +22,18 @@ describe PaypalService do
     end
 
     specify 'Order should be fulfilled if all checks pass'  do
-      order = double("Order")
-      Order.stub(:find) { order }
       Payment.stub(:previously_processed?) { false }
+      Payment.stub(:transaction_has_correct_amount?) { true }
+      Account.stub(:receiver_email_merchant_primary_paypal_email?) { true }
 
-      order.should_receive(:fulfill)
+      Order.should_receive(:ready_for_fulfillment)
 
       @paypal_service.process_payment
     end
     
     specify 'Check that transaction_id has not been previously processed'  do
-      order = stub('Order').as_null_object
-      Order.stub(:find) { order }
+      Account.stub(:receiver_email_merchant_primary_paypal_email?) { false }
+
       Payment.should_receive(:previously_processed?)
 
       @paypal_service.process_payment      
