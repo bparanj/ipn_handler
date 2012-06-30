@@ -17,6 +17,10 @@ This example shows:
    make most of the methods as private. Only process_payment class method will be public. The specs will be
    moved to ActiveRecord object tests for PaypalNotification.
 8. Surprised to see how injecting dependencies to make the test run faster resulted in decorator pattern.
+9. The has_correct_amount can be made private, the tests will require testing it indirectly using
+   the method transaction_has_correct_amount which requires transaction_id to be set and the
+   record to be saved. It became a trade-off between test speed vs encapsulation. If this library
+   is for internal use we can choose has_correct_amount to be public.
 
 
 require 'uri'
