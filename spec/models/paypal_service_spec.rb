@@ -56,12 +56,9 @@ describe PaypalService do
      
      Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
     end
-
+#  This test was passing even though the interface was changed from fulfill to ready_for_fulfillment in the order object
     specify 'Order should not be fulfilled if payment_status is not Completed'  do
-      order = double("Order")
-      Order.stub(:find) { order }
-
-      order.should_not_receive(:fulfill)
+      Order.should_not_receive(:ready_for_fulfillment)
 
       @paypal_service_incompelete.process_payment
     end

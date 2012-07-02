@@ -45,7 +45,7 @@ describe Payment do
     result.should be_false
   end
 
-  specify 'Check that the transaction is not already processed, identified by the transaction ID', :focus => true do
+  specify 'Check that the transaction is not already processed, identified by the transaction ID' do
     payment = Payment.new
     payment.transaction_id = '6G996328CK404320L'
     payment.processed = false

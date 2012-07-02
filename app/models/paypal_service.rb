@@ -5,9 +5,9 @@ class PaypalService
 
   def initialize(notify)
     @notify = notify
-    @valid = @notify.acknowledge
   end
-
+  # TODO:  Store transaction IDs in database so that only unique transactions
+  # are processed 
   def process_payment
     if @notify.complete?
       # TODO: Use the item id to find the order id that is combined with other pass through variables.

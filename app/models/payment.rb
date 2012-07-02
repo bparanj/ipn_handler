@@ -2,7 +2,8 @@ require 'money'
 
 class Payment < ActiveRecord::Base
   attr_accessible :currency, :gross, :transaction_id
-    
+  # Use the transaction ID to verify that the transaction has not already been processed, 
+  # which prevents duplicate transactions from being processed.
   def self.previously_processed?(transaction_id)
     payment = find_by_transaction_id(transaction_id)
     payment.processed?
