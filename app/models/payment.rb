@@ -10,6 +10,7 @@ class Payment < ActiveRecord::Base
   end
   
   # Verify that the price, item description, and so on, match the transaction on your website.
+  # Verify that the payment amount actually matches what you intend to charge.
   # This check provides additional protection against fraud.
   def self.transaction_has_correct_amount?(transaction_id, gross, currency)
     payment = find_by_transaction_id(transaction_id)

@@ -19,8 +19,8 @@ describe PaypalIpnController do
     post 'notify', {}
     response.body.should be_blank
   end
-
-  specify 'If ipn is valid, payment should be processed' do
+# 
+  specify 'Verify that the message came from PayPal. If so, payment should be processed' do
     @ipn.stub(:acknowledge => true )
     @ipn.should_receive(:process_payment)
 

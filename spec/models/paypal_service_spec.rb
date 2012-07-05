@@ -62,6 +62,10 @@ describe PaypalService do
 
       @paypal_service_incompelete.process_payment
     end
+    # Confirm that the payment status is Completed.
+    # PayPal sends IPN messages for pending and denied payments as well; do not ship until the payment has cleared.
+
+    # specify 'Verify that you are the intended recipient of the IPN message by checking the email address in the message'
 
   end
 end
