@@ -96,6 +96,13 @@ http://activemerchant.rubyforge.org/classes/ActiveMerchant/Billing/Integrations/
 
 ----------------------------------------------------------------------------------------
 
+# Write a test for the following line of fraud check. Instead of order total, payment.amount is checked.
+#           if notify.complete? and order.total == notify.amount
+#             order.status = 'success' 
+#             payment.status = notify.status
+#             shop.ship(order)
+
+
 require 'uri'
 require 'net/http'
 require 'net/https'
@@ -106,6 +113,10 @@ require 'net/https'
 #     def paypal_ipn
 #       notify = Paypal::Notification.new(request.raw_post)
 #   
+#       Item can have many orders
+#       Find a unique order in the db by searching on custom variable : 
+# 			order = Order.find_by_custom(notify.custom)
+# 
 #       order = Order.find(notify.item_id)
 #     
 #       if notify.acknowledge 
