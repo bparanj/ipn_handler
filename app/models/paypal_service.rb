@@ -1,5 +1,5 @@
 class PaypalService
-  attr_reader :notify, :valid
+  attr_reader :notify
 
   include ActiveMerchant::Billing::Integrations
 
@@ -12,9 +12,9 @@ class PaypalService
       
       previously_processed = Payment.previously_processed?(@notify.transaction_id)
       unless previously_processed
-        if Account.receiver_email_merchant_primary_paypal_email?(@notify.item_id, @notify.account)      	
+        unless Account.spoofed_receiver_email?(@notify.item_id, @notify.account)      	
           if Payment.transaction_has_correct_amount?(@notify, @notify.gross, @notify.currency)
-            Order.ready_for_fulfillment(@notify.item_id)
+            Order.mark_ready_for_fulfillment(@notify.item_id)
           end
         end
       end
@@ -22,5 +22,16 @@ class PaypalService
 
   end
 
+  def handle_new_transaction(transaction_id)
+    if Payment.new_transaction?(transaction_id)
+      Payment.create(transaction_id: transaction_id, 
+                    amount: @notify.amount,
+                    payment_method: 'Paypal',
+                    description: @notify.params['item_name'],
+                    status: @notify.status,
+                    test: @notify.test?,
+                    gross: @notify.gross, 
+                    currency: @notify.currency)
+    end
+  end
 end
-

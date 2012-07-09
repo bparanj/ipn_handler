@@ -5,8 +5,12 @@ class Payment < ActiveRecord::Base
   # Use the transaction ID to verify that the transaction has not already been processed, 
   # which prevents duplicate transactions from being processed.
   def self.previously_processed?(transaction_id)
-    payment = find_by_transaction_id(transaction_id)
-    payment.processed?
+    if new_transaction?(transaction_id)
+     false
+    else
+      payment = find_by_transaction_id(transaction_id)
+      payment.processed? 
+    end
   end
   
   # Verify that the price, item description, and so on, match the transaction on your website.
@@ -17,6 +21,11 @@ class Payment < ActiveRecord::Base
     payment.has_correct_amount?(gross, currency)
   end
     
+  def self.new_transaction?(transaction_id)
+    payment = find_by_transaction_id(transaction_id)
+    payment.nil?
+  end
+  
   def has_correct_amount?(gross, currency)
     paid = Money.new(BigDecimal.new(gross), currency)
     price = Money.new(self.gross, self.currency)

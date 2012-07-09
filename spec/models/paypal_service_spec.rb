@@ -24,23 +24,37 @@ describe PaypalService do
     specify 'Order should be fulfilled if all checks pass'  do
       Payment.stub(:previously_processed?) { false }
       Payment.stub(:transaction_has_correct_amount?) { true }
-      Account.stub(:receiver_email_merchant_primary_paypal_email?) { true }
+      Account.stub(:spoofed_receiver_email?) { false }
 
-      Order.should_receive(:ready_for_fulfillment)
+      Order.should_receive(:mark_ready_for_fulfillment)
 
       @paypal_service.process_payment
     end
     
     specify 'Check that transaction_id has not been previously processed'  do
-      Account.stub(:receiver_email_merchant_primary_paypal_email?) { false }
+      Account.stub(:spoofed_receiver_email?) { true }
 
       Payment.should_receive(:previously_processed?)
 
       @paypal_service.process_payment      
     end
+        
   end
 
-  context 'Payment Incomplete' do
+  context 'Payment is new' do
+    specify 'If the Transaction is new then Payment must be created to store transaction_id and other details' do
+      paypal_service = PaypalService.new(Paypal::Notification.new(http_raw_data))
+      Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
+
+      payment = Payment.stub(:new_transaction?) { true }
+
+      Payment.should_receive(:create)
+
+      paypal_service.handle_new_transaction('NEW')
+    end  
+  end
+    
+  context 'Payment is Incomplete' do
     before do
      n = Bogus.notification('name=mama')
      n.stub(:acknowledge) { true }
@@ -56,16 +70,14 @@ describe PaypalService do
      
      Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
     end
-#  This test was passing even though the interface was changed from fulfill to ready_for_fulfillment in the order object
+    # This test was passing even though the interface was changed from fulfill to mark_ready_for_fulfillment in the order object
+    # Confirm that the payment status is Completed.
     specify 'Order should not be fulfilled if payment_status is not Completed'  do
-      Order.should_not_receive(:ready_for_fulfillment)
+      Order.should_not_receive(:mark_ready_for_fulfillment)
 
       @paypal_service_incompelete.process_payment
     end
-    # Confirm that the payment status is Completed.
     # PayPal sends IPN messages for pending and denied payments as well; do not ship until the payment has cleared.
-
     # specify 'Verify that you are the intended recipient of the IPN message by checking the email address in the message'
-
   end
 end

@@ -8,6 +8,7 @@ class PaypalIpnController < ApplicationController
     ipn = PaypalService.new(Paypal::Notification.new(request.raw_post))
 
     if ipn.acknowledge
+      ipn.handle_new_transaction
       ipn.process_payment
     else
       logger.info("Failed to verify Paypal IPN notification, please investigate : #{request.raw_post}")

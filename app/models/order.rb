@@ -6,7 +6,7 @@ class Order < ActiveRecord::Base
     save
   end
   
-  def self.ready_for_fulfillment(id)
+  def self.mark_ready_for_fulfillment(id)
     order = find(id)
     order.fulfill
   end

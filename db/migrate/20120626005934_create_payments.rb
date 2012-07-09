@@ -10,3 +10,5 @@ class CreatePayments < ActiveRecord::Migration
     end
   end
 end
+
+

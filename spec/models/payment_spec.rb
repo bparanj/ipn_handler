@@ -55,6 +55,16 @@ describe Payment do
 
     already_processed.should be_false
   end
+  
+  specify 'If the payment object is not found for the given transaction id, then it is not already processed.' do
+    already_processed = Payment.previously_processed?('6G996328CK404320L')
+    already_processed.should be_false
+  end
+  
+  specify 'Create a new payment for a new transaction' do
+    existing_transaction = Payment.new_transaction?('6G996328CK404320L')
+    existing_transaction.should be_true
+  end
 
   specify 'Check that given transaction has correct amount' do
     payment = Payment.new

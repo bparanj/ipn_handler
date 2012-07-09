@@ -3,8 +3,11 @@ class Account < ActiveRecord::Base
 
   # Validate that the receiver’s email address is registered to you.
   # This check provides additional protection against fraud.
-  def self.receiver_email_merchant_primary_paypal_email?(custom, email)
+  # receiver_email_merchant_primary_paypal_email
+  def self.spoofed_receiver_email?(custom, email)
     account = find_by_custom(custom)
-    account.primary_paypal_email == email
+    account.primary_paypal_email != email
   end
+  
+  
 end

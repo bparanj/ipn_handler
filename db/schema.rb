@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120628065201) do
+ActiveRecord::Schema.define(:version => 20120709063744) do
 
   create_table "accounts", :force => true do |t|
     t.string   "primary_paypal_email"
@@ -33,6 +33,11 @@ ActiveRecord::Schema.define(:version => 20120628065201) do
     t.boolean  "processed",                                    :default => false
     t.datetime "created_at",                                                      :null => false
     t.datetime "updated_at",                                                      :null => false
+    t.decimal  "amount",         :precision => 8, :scale => 2
+    t.string   "payment_method"
+    t.string   "description"
+    t.string   "status"
+    t.string   "test"
   end
 
 end
