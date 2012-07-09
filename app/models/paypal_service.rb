@@ -13,7 +13,7 @@ class PaypalService
     return if  Payment.previously_processed?(@notify.transaction_id)  
     return if  Account.spoofed_receiver_email?(@notify.item_id, @notify.account)      	
 
-    if Payment.transaction_has_correct_amount?(@notify, @notify.gross, @notify.currency)
+    if Payment.transaction_has_correct_amount?(@notify.transaction_id, @notify.gross, @notify.currency)
       Order.mark_ready_for_fulfillment(@notify.item_id)
     end
 
@@ -22,13 +22,13 @@ class PaypalService
   def handle_new_transaction(transaction_id)
     if Payment.new_transaction?(transaction_id)
       Payment.create(transaction_id: transaction_id, 
-      amount: @notify.amount,
-      payment_method: 'Paypal',
-      description: @notify.params['item_name'],
-      status: @notify.status,
-      test: @notify.test?,
-      gross: @notify.gross, 
-      currency: @notify.currency)
+                     amount: @notify.amount,
+                     payment_method: 'Paypal',
+                     description: @notify.params['item_name'],
+                     status: @notify.status,
+                     test: @notify.test?,
+                     gross: @notify.gross, 
+                     currency: @notify.currency)
     end
   end
 
