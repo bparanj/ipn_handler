@@ -39,7 +39,7 @@ To Do :
 		- test = notify.test?
 4. Find the subject field in the latest Paypal API docs
 5. Find the Third-Part API Grant access screen in the current Paypal website.
-
+6. Save payer_email to send order confirmation and fulfillment emails.
 
 0. Write Integration Test that hits the Paypal sandbox
 
@@ -96,12 +96,13 @@ http://activemerchant.rubyforge.org/classes/ActiveMerchant/Billing/Integrations/
 
 ----------------------------------------------------------------------------------------
 
+The following is done.
+
 # Write a test for the following line of fraud check. Instead of order total, payment.amount is checked.
 #           if notify.complete? and order.total == notify.amount
 #             order.status = 'success' 
 #             payment.status = notify.status
 #             shop.ship(order)
-
 
 require 'uri'
 require 'net/http'
