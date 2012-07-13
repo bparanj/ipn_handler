@@ -22,5 +22,22 @@ describe Account do
     result.should be_true
   end
   
+  specify 'payer_email - Customer primary email address. Use this email to provide any credits. Length: 127 characters' do
+    account = Account.new
+    long_user_name = 'z' * 116
+    account.primary_paypal_email = "#{long_user_name}@disney.com"
+    account.save
+    
+    account.reload
+    account.primary_paypal_email.should == "#{long_user_name}@disney.com"
+  end
+  
+  specify 'primary_paypal_email cannot exceed 127 characters' do
+    account = Account.new
+    long_user_name = 'z' * 127
+    account.primary_paypal_email = "#{long_user_name}@disney.com"
+
+    account.save.should be_false
+  end
   
 end

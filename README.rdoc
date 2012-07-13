@@ -21,7 +21,7 @@ This example shows:
    the method transaction_has_correct_amount which requires transaction_id to be set and the
    record to be saved. It became a trade-off between test speed vs encapsulation. If this library
    is for internal use we can choose has_correct_amount to be public.
-
+----------------------------------------------------------------------------------------
 
 To Do :
 
@@ -67,7 +67,6 @@ To Do :
    Length: 255 characters
 10. receiver_email - Primary email address of the payment recipient (that 
     is, the merchant). If the payment is sent to a non-primary email address on your PayPal account, the receiver_email is still your primary email.
-
     The value of this variable is normalized to lowercase characters.
     Length: 127 characters
 11. receiver_id - Unique account ID of the payment recipient (i.e., the 
@@ -86,6 +85,23 @@ To Do :
     Length: 28 characters
 
 ----------------------------------------------------------------------------------------
+
+		The URL that processes the IPN (notification URL), businesses can automate their order fulfillment process to perform such tasks as automatically updating a database with a new customer order, sending a confirmation email, and triggering an investigation into a claim made by a dissatisfied customer.
+
+		Since IPN messages can sometimes be delayed—hence not exactly “instant”—IPN should not be exclusively relied on when immediate order fulfillment is necessary, such as in the case of a digital download service.
+
+		IPN script should make sure to respond to the HTTP response with a 200 OK message to prevent additional attempts by PayPal to send the IPN.
+
+		If you receive an INVALID response, then either you’ve done something wrong or the original IPN should be treated as suspicious and investigated.
+
+		You should perform before completing and fulfilling the order:
+
+		• Confirm that the payment_status is Completed, since IPNs are also sent for other payment status updates, such as Pending or Failed.
+		• Check that the txn_id is unique, to prevent a fraudster from reusing an old, completed transaction. It’s especially important to perform this check if you use PDT with IPN and update your database with data from each.
+		• Validate that the receiver_email is an email address registered in your PayPal account, to prevent the payment from being sent to a fraudster’s account.
+		• Check other transaction details, such as the item number and price, to confirm that the price has not been changed by a malicious third party.
+
+----------------------------------------------------------------------------------------
 PayPal IPN using Active merchant
 
 https://gist.github.com/1502215
@@ -96,59 +112,3 @@ http://activemerchant.rubyforge.org/classes/ActiveMerchant/Billing/Integrations/
 
 ----------------------------------------------------------------------------------------
 
-The following is done.
-
-# Write a test for the following line of fraud check. Instead of order total, payment.amount is checked.
-#           if notify.complete? and order.total == notify.amount
-#             order.status = 'success' 
-#             payment.status = notify.status
-#             shop.ship(order)
-
-require 'uri'
-require 'net/http'
-require 'net/https'
-
-#   class BackendController < ApplicationController
-#     include ActiveMerchant::Billing::Integrations
-#
-#     def paypal_ipn
-#       notify = Paypal::Notification.new(request.raw_post)
-#   
-#       Item can have many orders
-#       Find a unique order in the db by searching on custom variable : 
-# 			order = Order.find_by_custom(notify.custom)
-# 
-#       order = Order.find(notify.item_id)
-#     
-#       if notify.acknowledge 
-#           payment = Payment.find_by_confirmation(notify.transaction_id) ||
-#           Payment.create(:amount => notify.amount,
-#                          :payment_method => 'paypal', 
-#                          :confirmation => notify.transaction_id,
-#                          :description => notify.params['item_name'], 
-#                          :status => notify.status,
-#                          :test => notify.test?)
-
-#         begin
-#           
-#           if notify.complete? and order.total == notify.amount
-#             order.status = 'success' 
-#             payment.status = notify.status
-#             shop.ship(order)
-#           else
-#             logger.error("Failed to verify Paypal's notification, please investigate")
-#           end
-#   
-#         rescue => e
-#           order.status        = 'failed'  
-#           payment.status = 'Error'    
-#           raise
-#         ensure
-#           order.save
-#           payment.save
-#         end
-#       end
-#   
-#       render :nothing
-#     end
-#   end
