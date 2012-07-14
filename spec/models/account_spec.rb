@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe Account do
-  # Check email address to make sure that this is not a spoof
-  specify 'Check that receiver_email field from Paypal is merchant Primary Paypal Email' do
+  # Validate that the receiver’s email address, receiver_email is registered 
+  # to you (the merchant) to make sure that this is not a spoof 
+  specify 'Not a spoof : Check that receiver_email field from Paypal is merchant Primary Paypal Email' do
     account = Account.new
     account.custom = 'X5FI29'
     account.primary_paypal_email = 'bugs@disney.com'
@@ -17,7 +18,7 @@ describe Account do
     account.custom = 'X5FI29'
     account.primary_paypal_email = 'bugs@disney.com'
     account.save
-    
+    # Account.spoofed_receiver_email?('X5FI29', receiver_email posted by Paypal)
     result = Account.spoofed_receiver_email?('X5FI29','daffy@disney.com')
     result.should be_true
   end
@@ -31,7 +32,7 @@ describe Account do
     account.reload
     account.primary_paypal_email.should == "#{long_user_name}@disney.com"
   end
-  
+  # "receiver_email - Primary email address of the payment recipient (merchant). If the payment is sent to a non-primary email address on your PayPal account, the receiver_email is still your primary email."
   specify 'primary_paypal_email cannot exceed 127 characters' do
     account = Account.new
     long_user_name = 'z' * 127
@@ -40,4 +41,28 @@ describe Account do
     account.save.should be_false
   end
   
+  specify 'Email address or account ID of the payment recipient (merchant) is normalized to lowercase characters' do
+    account = Account.new
+    account.primary_paypal_email = "SOME_USER@example.com"
+    account.save
+    
+    account.reload
+    account.primary_paypal_email.should == "some_user@example.com"
+  end
+  
+  specify 'Custom value as passed by you, the merchant cannot exceed 255 characters' do
+    account = Account.new
+    account.primary_paypal_email = "user@example.com"
+    account.custom = "e" * 256
+    
+    account.save.should be_false
+  end
+  
+  specify 'Custom value that is 255 characters is valid' do
+    account = Account.new
+    account.primary_paypal_email = "user@example.com"
+    account.custom = "e" * 255
+    
+    account.save.should be_true  
+  end
 end
