@@ -51,46 +51,48 @@ describe Payment do
     
   end
   
-  specify 'When the transaction status is complete, the transaction has been processed' do
-    payment = Payment.new
-    payment.transaction_id = 20
-    payment.status = Payment::COMPLETE
+  context 'Payment processing' do
+    specify 'When the transaction status is complete, the transaction has been processed' do
+      payment = Payment.new
+      payment.transaction_id = 20
+      payment.status = Payment::COMPLETE
 
-    payment.should be_complete
-  end
-  
-  specify 'Check that the transaction is not already processed, identified by the transaction ID' do
-    payment = Payment.new
-    payment.transaction_id = '6G996328CK404320L'
-    payment.status = Payment::PENDING
-    payment.save
+      payment.should be_complete
+    end
 
-    already_processed = Payment.previously_processed?('6G996328CK404320L')
-    already_processed.should be_false
-  end
-  
-  specify 'If the payment object is not found for the given transaction id, then it is not already processed.' do
-    already_processed = Payment.previously_processed?('6G996328CK404320L')
-    already_processed.should be_false
-  end
+    specify 'Check that the transaction is not already processed, identified by the transaction ID' do
+      payment = Payment.new
+      payment.transaction_id = '6G996328CK404320L'
+      payment.status = Payment::PENDING
+      payment.save
 
-  # Prevent duplicate transactions from being processed
-  specify 'If the payment object is found for the given transaction id and the status is complete, then it is already processed.' do
-    transaction_id = '6G996328CK404320L'
-    payment = Payment.new
-    payment.transaction_id = transaction_id
-    payment.gross = 100.00
-    payment.status = Payment::COMPLETE
-    payment.currency = 'CAD'
-    payment.save
-    
-    already_processed = Payment.previously_processed?(transaction_id)
-    already_processed.should be_true
-  end
-  
-  specify 'Create a new payment for a new transaction' do
-    new_transaction = Payment.new_transaction?('6G996328CK404320L')
-    new_transaction.should be_true
+      already_processed = Payment.previously_processed?('6G996328CK404320L')
+      already_processed.should be_false
+    end
+
+    specify 'If the payment object is not found for the given transaction id, then it is not already processed.' do
+      already_processed = Payment.previously_processed?('6G996328CK404320L')
+      already_processed.should be_false
+    end
+
+    # Prevent duplicate transactions from being processed
+    specify 'If the payment object is found for the given transaction id and the status is complete, then it is already processed.' do
+      transaction_id = '6G996328CK404320L'
+      payment = Payment.new
+      payment.transaction_id = transaction_id
+      payment.gross = 100.00
+      payment.status = Payment::COMPLETE
+      payment.currency = 'CAD'
+      payment.save
+
+      already_processed = Payment.previously_processed?(transaction_id)
+      already_processed.should be_true
+    end
+
+    specify 'Create a new payment for a new transaction' do
+      new_transaction = Payment.new_transaction?('6G996328CK404320L')
+      new_transaction.should be_true
+    end
   end
 
   context 'Payment fraud checks' do

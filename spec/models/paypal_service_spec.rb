@@ -52,8 +52,7 @@ describe PaypalService do
 
       paypal_service.handle_new_transaction('NEW_TRANSACTION_ID')
     end  
-    
-    
+
   end
     
   context 'Payment is Incomplete' do
@@ -81,6 +80,5 @@ describe PaypalService do
       @paypal_service_incompelete.process_payment
     end
     
-    # specify 'Verify that you are the intended recipient of the IPN message by checking the email address in the message'
   end
 end
