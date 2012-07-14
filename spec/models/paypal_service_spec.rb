@@ -53,10 +53,6 @@ describe PaypalService do
       paypal_service.handle_new_transaction('NEW_TRANSACTION_ID')
     end  
     
-    # This is especially important to perform this check if you use PDT with IPN and update your database with data from each.
-    specify 'Check that the txn_id is unique, to prevent a fraudster from reusing an old, completed transaction.' do
-      
-    end
     
   end
     

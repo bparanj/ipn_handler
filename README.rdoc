@@ -42,8 +42,8 @@ To Do :
 
 			You should perform before completing and fulfilling the order:
 
-			• Confirm that the payment_status is Completed, since IPNs are also sent for other payment status updates, such as Pending or Failed.
-			• Check that the txn_id is unique, to prevent a fraudster from reusing an old, completed transaction. It’s especially important to perform this check if you use PDT with IPN and update your database with data from each.
+			• 
+			• 
 			• Validate that the receiver_email is an email address registered in your PayPal account, to prevent the payment from being sent to a fraudster’s account.
 			• Check other transaction details, such as the item number and price, to confirm that the price has not been changed by a malicious third party.
 
