@@ -1,5 +1,7 @@
 require 'spec_helper'
 
 describe Order do
-  pending "add some examples to (or delete) #{__FILE__}"
+  specify 'Order.total should be equal to payment.amount variable value given by Paypal.' do
+    # Payment#has_correct_amount? may be deleted.
+  end
 end

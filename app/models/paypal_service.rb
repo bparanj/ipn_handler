@@ -18,7 +18,13 @@ class PaypalService
     end
 
   end
-
+  # Store txn_id in database so that only unique transactions are processed
+  # txn_id - The merchant’s original transaction identification number for 
+  # the payment from the buyer, against which the case was registered.
+  # mc_gross - Full amount of the customer's payment, before transaction 
+  # fee is subtracted. Equivalent to payment_gross for USD payments. If this
+  # amount is negative, it signifies a refund or reversal, and either of those payment 
+  # statuses can be for the full or partial amount of the original transaction.
   def handle_new_transaction(transaction_id)
     if Payment.new_transaction?(transaction_id)
       Payment.create(transaction_id: transaction_id, 
