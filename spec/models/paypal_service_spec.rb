@@ -45,13 +45,19 @@ describe PaypalService do
     specify 'If the Transaction is new then Payment must be created to store transaction_id and other details' do
       paypal_service = PaypalService.new(Paypal::Notification.new(http_raw_data))
       Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
-
       payment = Payment.stub(:new_transaction?) { true }
-
+      # Mocking a third-party API is not a good idea. Here I am violating it because create method is stable enough
+      # and I don't want to test the active record save functionality
       Payment.should_receive(:create)
 
-      paypal_service.handle_new_transaction('NEW')
+      paypal_service.handle_new_transaction('NEW_TRANSACTION_ID')
     end  
+    
+    # This is especially important to perform this check if you use PDT with IPN and update your database with data from each.
+    specify 'Check that the txn_id is unique, to prevent a fraudster from reusing an old, completed transaction.' do
+      
+    end
+    
   end
     
   context 'Payment is Incomplete' do
@@ -71,13 +77,14 @@ describe PaypalService do
      Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
     end
     # This test was passing even though the interface was changed from fulfill to mark_ready_for_fulfillment in the order object
-    # Confirm that the payment status is Completed.
+    # Confirm that the payment_status is Completed, since IPNs are also sent for other payment status updates, such as Pending or Failed.
+    # PayPal sends IPN messages for pending and denied payments as well; do not ship until the payment has cleared.
     specify 'Order should not be fulfilled if payment_status is not Completed'  do
       Order.should_not_receive(:mark_ready_for_fulfillment)
 
       @paypal_service_incompelete.process_payment
     end
-    # PayPal sends IPN messages for pending and denied payments as well; do not ship until the payment has cleared.
+    
     # specify 'Verify that you are the intended recipient of the IPN message by checking the email address in the message'
   end
 end
