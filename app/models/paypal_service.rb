@@ -31,11 +31,13 @@ class PaypalService
                      amount: @notify.amount,
                      payment_method: 'Paypal',
                      description: @notify.params['item_name'],
+                     payer_id: @notify.params['payer_id'],
                      status: @notify.status,
                      test: @notify.test?,
                      gross: @notify.gross, 
                      currency: @notify.currency)
     end
+    # Added payer_id field that was not driven by test.
   end
 
 

@@ -93,6 +93,18 @@ describe Payment do
       new_transaction = Payment.new_transaction?('6G996328CK404320L')
       new_transaction.should be_true
     end
+    
+    specify 'Payer id (unique customer id) should be saved. Max length 13 characters' do
+      payment = Payment.new
+      payment.transaction_id = '6G996328CK404320L'
+      payment.gross = 100.00
+      payment.status = Payment::COMPLETE
+      payment.currency = 'CAD'
+      payment.payer_id = 'XIE93XOIEUTEEEEEEEEE'
+
+      result = payment.save
+      result.should be_true
+    end
   end
 
   context 'Payment fraud checks' do

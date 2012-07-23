@@ -8,8 +8,7 @@ This example shows:
 2. Read the ActiveMerchant tests to learn about the plugin. 
 3. The initial version of the tests were more like ActiveMerchant learning tests and tightly coupled to the 	
 	 implementation. Therefore the tests were brittle as the refactoring forced data to be hidden.
-4. Deleted tests that were not related to controller responsibilities. These were scaffolding tests
-   that gave quick feedback and allowed us to build the system.
+4. Deleted tests that were not related to controller responsibilities. These were scaffolding tests that gave quick feedback and allowed us to build the system.
 5. Moved those tests to layer below that provides the service to Paypal API.
 6. Notice the mocking of the Paypal service API in the controller specs.
 7. The first version of specs for PaypalService object has shown us the need for PaypalNotification active

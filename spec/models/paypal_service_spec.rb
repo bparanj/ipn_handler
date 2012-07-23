@@ -67,7 +67,7 @@ describe PaypalService do
      n.stub(:account) {'tobi@leetsoft.com'}
      n.stub(:item_id) {  '89CVZ' }
 
-     @paypal_service_incompelete = PaypalService.new(n)
+     @paypal_service_incomplete = PaypalService.new(n)
      
      Paypal::Notification.any_instance.stub(:ssl_post).and_return('VERIFIED')
     end
@@ -77,7 +77,7 @@ describe PaypalService do
     specify 'Order should not be fulfilled if payment_status is not Completed'  do
       Order.should_not_receive(:mark_ready_for_fulfillment)
 
-      @paypal_service_incompelete.process_payment
+      @paypal_service_incomplete.process_payment
     end
     
   end

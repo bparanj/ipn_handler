@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120714201856) do
+ActiveRecord::Schema.define(:version => 20120723063307) do
 
   create_table "accounts", :force => true do |t|
     t.string   "primary_paypal_email"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20120714201856) do
     t.string   "description"
     t.string   "status"
     t.string   "test"
+    t.string   "payer_id"
   end
 
 end
