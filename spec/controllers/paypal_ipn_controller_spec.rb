@@ -8,6 +8,9 @@ describe PaypalIpnController do
       @ipn = double("Paypal Service")
       @ipn.stub(:acknowledge => false)
       PaypalService.stub(:new) { @ipn }
+      
+      @logger = mock(:info => nil)
+      controller.stub!(:paypal_logger) { @logger }
     end
 
     specify "IPN Listener accepts HTTP post from PayPal. The return http status code must be 204" do
@@ -28,10 +31,7 @@ describe PaypalIpnController do
     end
 
     specify 'If ipn is invalid, log the message for manual intervention' do
-      logger = mock(:info => nil)
-      controller.stub!(:logger) { logger }
-
-      logger.should_receive(:info)
+      @logger.should_receive(:info)
 
       post 'notify', {}
     end

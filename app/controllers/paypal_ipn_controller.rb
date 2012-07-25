@@ -11,9 +11,11 @@ class PaypalIpnController < ApplicationController
       ipn.handle_new_transaction
       ipn.process_payment
     else
-      logger.info("Failed to verify Paypal IPN notification, please investigate : #{request.raw_post}")
+      paypal_logger.info("Failed to verify Paypal IPN notification, please investigate : #{request.raw_post}")
     end
 
     render :text => '', :status => :no_content  
   end
 end
+
+
