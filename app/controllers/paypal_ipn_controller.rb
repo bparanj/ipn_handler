@@ -4,14 +4,14 @@ class PaypalIpnController < ApplicationController
 
   include ActiveMerchant::Billing::Integrations
   
-  def notify
+  def notify    
     ipn = PaypalService.new(Paypal::Notification.new(request.raw_post))
 
     if ipn.acknowledge
       ipn.handle_new_transaction
       ipn.process_payment
     else
-      paypal_logger.info("Failed to verify Paypal IPN notification, please investigate : #{request.raw_post}")
+      PaypalLogger.info("Failed to verify Paypal IPN notification, please investigate : #{request.raw_post}")
     end
 
     render :text => '', :status => :no_content  
