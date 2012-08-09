@@ -30,6 +30,26 @@ describe PaypalService do
 
       @paypal_service.process_payment
     end
+
+    specify 'Order should not be fulfilled if the receiver_email from paypal does not match primary paypal email'  do
+      Payment.stub(:previously_processed?) { false }
+      Payment.stub(:transaction_has_correct_amount?) { true }
+      Account.stub(:spoofed_receiver_email?) { true }
+
+      Order.should_not_receive(:mark_ready_for_fulfillment)
+
+      @paypal_service.process_payment
+    end    
+
+    specify 'Order should not be fulfilled if the price has been changed by a malicious third party.'  do
+      Payment.stub(:previously_processed?) { false }
+      Account.stub(:spoofed_receiver_email?) { false }
+      Payment.stub(:transaction_has_correct_amount?) { false }
+      
+      Order.should_not_receive(:mark_ready_for_fulfillment)
+
+      @paypal_service.process_payment
+    end    
     
     specify 'Check that transaction_id has not been previously processed'  do
       Account.stub(:spoofed_receiver_email?) { true }

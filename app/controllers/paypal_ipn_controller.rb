@@ -1,6 +1,7 @@
 class PaypalIpnController < ApplicationController
   # skip security check because post comes from paypal. 
-  skip_before_filter :verify_authenticity_token
+  # This is commented out because superclass has no protect_from_forgery.
+  # skip_before_filter :verify_authenticity_token
 
   include ActiveMerchant::Billing::Integrations
   

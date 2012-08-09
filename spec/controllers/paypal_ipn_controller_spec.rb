@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe PaypalIpnController do
   include ActiveMerchant::Billing::Integrations
 
@@ -16,7 +15,7 @@ describe PaypalIpnController do
     specify "IPN Listener accepts HTTP post from PayPal. The return http status code must be 204" do
       post 'notify', {}
 
-      response.response_code.should == 204
+      response.response_code.should == Http::StatusCode::NO_CONTENT
     end
 
     specify "View should not be rendered for the Paypal IPN callback" do    

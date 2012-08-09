@@ -24,7 +24,7 @@ This example shows:
 
 To Do :
 
-1. Setup Paypal Sandbox accounts for seller and buyer with credit card and bank accounts.
+1. Setup Paypal Sandbox accounts for seller and buyer with credit card and bank accounts. [ DONE ]
 2. Read IPN guide and implement the validation rules for fields.  
 3. Refine the controller to handle all cases. If the response code is not 200, save the message for further investigation.
 	 How to check the response code in ActiveMerchant?
@@ -41,14 +41,12 @@ To Do :
 
 			You should perform before completing and fulfilling the order:
 
-			• 
-			• 
-			• Validate that the receiver_email is an email address registered in your PayPal account, to prevent the payment from being sent to a fraudster’s account.
-			• Check other transaction details, such as the item number and price, to confirm that the price has not been changed by a malicious third party.
+			• Validate that the receiver_email is an email address registered in your PayPal account, to prevent the payment from being sent to a fraudster’s account. [ DONE ]
+			• Check other transaction details, such as the item number and price, to confirm that the price has not been changed by a malicious third party. [ DONE ]
 
 	----------------------------------------------------------------------------------------
 	
-4. Use a separate logger for IPN messages in Paypal IPN controller.
+4. Use a separate logger for IPN messages in Paypal IPN controller. [ DONE ]
 5. Review Paypal IPN Up and Running. Create task list based on this book. 
 6. Write Integration Test that hits the Paypal sandbox
 7. Find the Third-Party API Grant access screen in the current Paypal website. 
