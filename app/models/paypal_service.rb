@@ -35,7 +35,8 @@ class PaypalService
                      status: @notify.status,
                      test: @notify.test?,
                      gross: @notify.gross, 
-                     currency: @notify.currency)
+                     currency: @notify.currency,
+                     payer_email: @notify.params['payer_email'])
     end
     # Added payer_id field that was not driven by test.
   end

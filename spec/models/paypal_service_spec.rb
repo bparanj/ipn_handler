@@ -15,6 +15,7 @@ describe PaypalService do
       n.stub(:currency) { 'CAD' }
       n.stub(:account) {'tobi@leetsoft.com'}
       n.stub(:item_id) {  '89CVZ' }
+      n.stub(:payer_email) {  'big@spender.com' }
 
       @paypal_service = PaypalService.new(n)
 
