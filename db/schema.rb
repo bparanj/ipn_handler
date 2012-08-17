@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(:version => 20120723063307) do
     t.string   "status"
     t.string   "test"
     t.string   "payer_email"
+    t.string   "payment_date"
     t.string   "payer_id"
   end
 

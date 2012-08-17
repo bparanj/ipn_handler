@@ -6,5 +6,6 @@ class AddFieldsToPayments < ActiveRecord::Migration
     add_column :payments, :status, :string
     add_column :payments, :test, :string
     add_column :payments, :payer_email, :string
+    add_column :payments, :payment_date, :string
   end
 end
