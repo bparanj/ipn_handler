@@ -13,12 +13,9 @@ class Payment < ActiveRecord::Base
   end
   
   def self.previously_processed?(transaction_id)
-    if new_transaction?(transaction_id)
-     false
-    else
-      payment = find_by_transaction_id(transaction_id)
-      payment.complete? 
-    end
+    return false if new_transaction?(transaction_id)
+    payment = find_by_transaction_id(transaction_id)
+    payment.complete? 
   end
   
   # Verify that the price, item description, and so on, match the transaction on your website.
@@ -35,9 +32,7 @@ class Payment < ActiveRecord::Base
   end
     
   def self.existing_incomplete_transaction?(transaction_id)
-    return false if new_transaction?(transaction_id)
-    payment = find_by_transaction_id(transaction_id)
-    !payment.complete?
+    !previously_processed?
   end
     
   def complete?
